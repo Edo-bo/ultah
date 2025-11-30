@@ -7,17 +7,11 @@
     
     <!-- Pratinjau Link ke Sosial Media (Open Graph & Twitter Card) -->
     <meta property="og:title" content="Special Day: Zahratus Sania">
-    <meta property="og:description" content="Hari spesial untuk Zahratus Sania. Rayakan momen ulang tahun penuh kebahagiaan dan doa terbaik untuknya.">
-    <meta property="og:image" content="https://img1.pixhost.to/images/10518/665868053_alip-1764418673163.jpg">
+    <meta property="og:description" content="Rayakan momen ulang tahun penuh kebahagiaan dan doa terbaik untuk Zahratus Sania.">
+    <meta property="og:image" content="https://placehold.co/1200x630/ec4899/ffffff?text=Zahratus+Sania+Birthday">
     <meta property="og:url" content="https://website.happy-birthday.web.id">
     <meta property="og:type" content="website">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Special Day: Zahratus Sania">
-    <meta name="twitter:description" content="Hari spesial untuk Zahratus Sania. Rayakan momen ulang tahun penuh kebahagiaan dan doa terbaik untuknya.">
-    <meta name="twitter:image" content="https://img1.pixhost.to/images/10518/665868053_alip-1764418673163.jpg">
-    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -31,32 +25,28 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- CUSTOM STYLES --- */
+        /* --- CUSTOM STYLES & FONT SETUP --- */
         body {
             font-family: 'Quicksand', sans-serif;
-            background-color: #fce7f3; /* Pink-100 */
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-color: #fcf7ff; /* Sangat cerah */
+        }
+
+        /* Gradient Background yang Lebih Lembut */
+        .premium-bg {
+            background-image: radial-gradient(at 0% 0%, hsla(253,100%,90%,1) 0, transparent 50%), 
+                              radial-gradient(at 50% 100%, hsla(339,100%,80%,1) 0, transparent 50%),
+                              radial-gradient(at 100% 0%, hsla(280,100%,70%,1) 0, transparent 50%);
             background-size: cover;
             background-attachment: fixed;
-            overflow-x: hidden;
         }
 
-        /* Glassmorphism Card */
+        /* Glassmorphism Card yang Lebih Jelas */
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .glass-card-dark {
-            background: rgba(20, 20, 20, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: white;
+            background: rgba(255, 255, 255, 0.85); /* Lebih solid */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .font-handwriting {
@@ -92,7 +82,7 @@
         .typing-cursor::after {
             content: '|';
             animation: blink 1s step-end infinite;
-            color: #ec4899;
+            color: #db2777; /* Rose-600 */
         }
         @keyframes blink { 50% { opacity: 0; } }
 
@@ -100,11 +90,43 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Smooth Scroll */
-        html { scroll-behavior: smooth; }
+        /* Reaction Button Style */
+        .reaction-btn {
+            @apply flex flex-col items-center justify-center p-3 rounded-xl border-2 border-transparent transition duration-200 transform hover:scale-110 active:scale-95 bg-white shadow-md;
+        }
+        .reaction-btn.selected {
+            @apply bg-rose-50 border-rose-400 shadow-xl scale-110;
+        }
+        
+        /* Custom animation for reactions */
+        @keyframes ping-once {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-ping-once {
+            animation: ping-once 0.5s cubic-bezier(0, 0, 0.2, 1);
+        }
+
+        /* Neumorphism input style for chat */
+        .neumorphism-input {
+            @apply border-none rounded-xl bg-gray-100 shadow-inner-custom;
+            box-shadow: inset 2px 2px 5px #babecc, inset -5px -5px 10px #ffffff;
+        }
+
+        /* Countdown circle unit style */
+        .countdown-unit {
+            @apply w-16 h-16 sm:w-20 sm:h-20 flex flex-col items-center justify-center rounded-full bg-white/70 backdrop-blur-sm shadow-lg border border-rose-200 p-1 transform transition duration-300 hover:scale-105;
+        }
+        .countdown-number {
+            @apply text-xl sm:text-2xl font-extrabold text-rose-600 leading-none;
+        }
+        .countdown-label {
+            @apply text-xs sm:text-sm text-gray-500 font-semibold uppercase leading-none mt-1;
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen">
+<body class="antialiased min-h-screen premium-bg">
 
     <!-- AUDIO (Looping) -->
     <audio id="bg-music" loop>
@@ -114,122 +136,204 @@
     </audio>
 
     <!-- === INTRO SCREEN (KADO) === -->
-    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-pink-400 via-purple-300 to-indigo-400 transition-all duration-1000">
+    <div id="intro-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-rose-400 via-pink-300 to-fuchsia-400 transition-all duration-1000">
         <!-- Floating Particles Background -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <div class="absolute top-10 left-10 w-20 h-20 bg-white rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-pulse"></div>
             <div class="absolute bottom-20 right-20 w-32 h-32 bg-yellow-300 rounded-full mix-blend-overlay filter blur-xl opacity-30 animate-bounce"></div>
         </div>
 
-        <p class="mb-10 text-xl font-bold text-white tracking-widest uppercase drop-shadow-lg animate-bounce">
-            Ketuk Kadonya! 🎁
+        <p class="mb-10 text-2xl md:text-3xl font-bold text-white tracking-widest uppercase drop-shadow-xl animate-pulse">
+            Buka Kado Spesialmu! 🎁
         </p>
 
         <!-- KADO -->
         <div id="gift-container" class="relative cursor-pointer transition-transform duration-200" style="--scale: 1" onclick="handleGiftClick()">
-            <div class="text-8xl filter drop-shadow-2xl hover:brightness-110">🎁</div>
+            <div class="text-[100px] md:text-[150px] filter drop-shadow-2xl hover:brightness-110 transition-all duration-300">
+                <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white drop-shadow-xl">
+                    <rect x="2" y="7" width="20" height="15" rx="2" fill="#ec4899" stroke="#be185d" stroke-width="2"/>
+                    <path d="M2 7H22" stroke="#be185d" stroke-width="2" stroke-linecap="round"/>
+                    <rect x="5" y="1" width="14" height="6" rx="2" fill="#f472b6" stroke="#db2777" stroke-width="2"/>
+                    <path d="M12 1V22M2 14H22" stroke="#fef3c7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
         </div>
 
-        <p id="click-status" class="mt-8 text-white/80 font-medium text-sm">Tap tap tap!</p>
+        <p id="click-status" class="mt-8 text-white/90 font-medium text-lg md:text-xl">Ketuk 5 kali untuk membuka! 👆</p>
     </div>
 
     <!-- === MAIN CONTENT === -->
-    <div id="main-content" class="hidden relative w-full max-w-lg mx-auto bg-white/90 min-h-screen shadow-2xl overflow-hidden backdrop-blur-sm">
+    <!-- Batasi lebar konten untuk estetika di desktop/tablet dan gunakan padding adaptif -->
+    <div id="main-content" class="hidden relative w-full mx-auto min-h-screen shadow-2xl md:max-w-xl lg:max-w-2xl">
         
         <!-- Balloon Layer -->
         <div id="balloon-container" class="absolute inset-0 pointer-events-none overflow-hidden h-full w-full"></div>
 
         <!-- HERO SECTION -->
-        <header class="relative pt-20 pb-10 px-6 text-center bg-gradient-to-b from-pink-200/50 to-white/50">
+        <header class="relative pt-12 pb-10 sm:pt-16 sm:pb-12 px-6 sm:px-10 text-center bg-gradient-to-b from-rose-100/70 to-white/90 glass-card">
             <!-- Guest Welcome Badge -->
-            <div id="guest-badge" class="absolute top-6 left-1/2 transform -translate-x-1/2 bg-white/80 px-4 py-1 rounded-full shadow-sm border border-pink-200 opacity-0 transition-opacity duration-1000">
-                <p class="text-xs text-pink-500 font-bold">Undangan Spesial Untuk <span id="guest-name-display" class="text-pink-700">Kamu</span></p>
+            <div id="guest-badge" class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1 rounded-full shadow-lg border border-rose-200 opacity-0 transition-opacity duration-1000 z-20 hover:scale-105">
+                <p class="text-xs text-rose-500 font-bold">Undangan Spesial Untuk <span id="guest-name-display" class="text-rose-700">Kamu</span></p>
             </div>
 
             <!-- Foto Ultah -->
-            <div class="relative w-52 h-52 mx-auto mb-6 group">
-                <div class="absolute inset-0 bg-gradient-to-tr from-pink-400 to-purple-500 rounded-full animate-spin-slow blur-md opacity-70 group-hover:opacity-100 transition"></div>
+            <div class="relative w-40 h-40 md:w-48 md:h-48 mx-auto mb-6 group mt-6">
+                <div class="absolute inset-0 bg-gradient-to-tr from-rose-400 to-fuchsia-500 rounded-full animate-spin-slow blur-lg opacity-70 group-hover:opacity-100 transition"></div>
                 <img 
                     src="foto/fotoultah.jpg" 
                     onerror="this.src='https://ui-avatars.com/api/?name=Zahratus+Sania&background=fbcfe8&color=db2777&size=256'"
                     alt="Birthday Girl" 
-                    class="relative w-full h-full object-cover rounded-full border-4 border-white shadow-xl z-10"
+                    class="relative w-full h-full object-cover rounded-full border-8 border-white shadow-2xl z-10 transform transition duration-500 group-hover:scale-[1.03]"
                 >
-                <div class="absolute bottom-2 right-2 z-20 bg-white p-2 rounded-full shadow-lg text-2xl animate-bounce">
-                    🎂
+                <div class="absolute bottom-2 right-2 z-20 bg-white p-2 rounded-full shadow-2xl text-2xl animate-bounce border-2 border-rose-100">
+                    💖
                 </div>
             </div>
 
-            <h1 class="font-handwriting text-5xl text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-600 mb-2 drop-shadow-sm pb-2">
+            <h1 class="font-handwriting text-5xl sm:text-6xl text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-fuchsia-600 mb-2 drop-shadow-md pt-4">
                 Happy Birthday
             </h1>
-            <h2 class="text-2xl font-bold text-gray-700 tracking-wide">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-700 tracking-wide">
                 Zahratus Sania
             </h2>
+
+            <!-- === COUNTDOWN TIMER === -->
+            <div class="mt-8 flex justify-center space-x-2 sm:space-x-3 text-center" id="countdown-timer">
+                <!-- Unit Hari -->
+                <div class="countdown-unit">
+                    <span id="countdown-days" class="countdown-number">00</span>
+                    <span class="countdown-label">Hari</span>
+                </div>
+                <!-- Unit Jam -->
+                <div class="countdown-unit">
+                    <span id="countdown-hours" class="countdown-number">00</span>
+                    <span class="countdown-label">Jam</span>
+                </div>
+                <!-- Unit Menit -->
+                <div class="countdown-unit">
+                    <span id="countdown-minutes" class="countdown-number">00</span>
+                    <span class="countdown-label">Menit</span>
+                </div>
+                <!-- Unit Detik -->
+                <div class="countdown-unit">
+                    <span id="countdown-seconds" class="countdown-number">00</span>
+                    <span class="countdown-label">Detik</span>
+                </div>
+            </div>
+            <p id="countdown-message" class="mt-4 text-sm font-semibold text-rose-500"></p>
+            <!-- === END COUNTDOWN TIMER === -->
+
         </header>
 
         <!-- WISHES (TYPEWRITER) -->
-        <section class="px-6 py-6 relative z-10">
-            <div class="glass-card rounded-3xl p-8 shadow-lg border-t-4 border-pink-300 relative">
-                <i data-lucide="quote" class="w-10 h-10 text-pink-300/50 absolute top-4 left-4 rotate-180"></i>
+        <section class="px-4 py-8 sm:px-8 sm:py-10 relative z-10">
+            <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-xl border-t-4 border-rose-300 relative transform transition duration-300 hover:shadow-2xl hover:scale-[1.01]">
+                <i data-lucide="sparkles" class="w-10 h-10 text-rose-300/50 absolute top-4 left-4 rotate-180"></i>
                 
-                <div id="typewriter-area" class="text-gray-700 leading-relaxed font-medium text-justify min-h-[180px] text-lg typing-cursor pt-4">
+                <!-- Teks rata kiri (text-left) sudah dipertahankan dari request sebelumnya -->
+                <div id="typewriter-area" class="text-gray-700 leading-relaxed font-medium text-left min-h-[200px] text-lg sm:text-xl typing-cursor pt-4">
                     <!-- Teks akan muncul di sini via JS -->
                 </div>
 
-                <i data-lucide="quote" class="w-10 h-10 text-pink-300/50 absolute bottom-4 right-4"></i>
+                <i data-lucide="sparkles" class="w-10 h-10 text-rose-300/50 absolute bottom-4 right-4"></i>
+            </div>
+        </section>
+        
+        <!-- REACTION BUTTONS (NEW SECTION) -->
+        <section class="px-4 py-8 sm:px-8 sm:py-10">
+            <h3 class="text-center font-bold text-gray-700 mb-6 text-xl sm:text-2xl">Bagaimana Reaksimu?</h3>
+            <div id="reactions-container" class="glass-card rounded-3xl p-6 sm:p-8 shadow-xl border-t-4 border-fuchsia-200 grid grid-cols-4 gap-4 sm:gap-6 text-center">
+               <!-- Reaction 1: I Love You (Menggunakan emoji hati merah universal) -->
+                <div class="flex flex-col items-center">
+                    <button class="reaction-btn text-2xl sm:text-3xl" data-reaction="love" onclick="handleReaction('love', this)">
+                        <!-- MENGGUNAKAN ❤️ (Emoji Hati Merah) -->
+                        <span class="transform transition duration-300 hover:scale-125 drop-shadow-lg" style="color: #ff5270;">❤️</span>
+                    </button>
+                    <span id="count-love" class="text-xs sm:text-sm font-bold text-rose-500 mt-2">0</span>
+                    <p class="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase leading-tight font-semibold">I Love You</p>
+                </div>
+
+
+                <!-- Reaction 2: Selamat Ulang Tahun -->
+                <div class="flex flex-col items-center">
+                    <button class="reaction-btn text-2xl sm:text-3xl" data-reaction="birthday" onclick="handleReaction('birthday', this)">
+                        <span class="transform transition duration-300 hover:scale-125">🥳</span>
+                    </button>
+                    <span id="count-birthday" class="text-xs sm:text-sm font-bold text-rose-500 mt-2">0</span>
+                    <p class="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase leading-tight font-semibold">Selamat Ultah</p>
+                </div>
+
+                <!-- Reaction 3: Maaf Gak Bisa Datang (RSVP No) -->
+                <div class="flex flex-col items-center">
+                    <button class="reaction-btn text-2xl sm:text-3xl" data-reaction="cannot_come" onclick="handleReaction('cannot_come', this)">
+                        <span class="transform transition duration-300 hover:scale-125">🙏</span>
+                    </button>
+                    <span id="count-cannot_come" class="text-xs sm:text-sm font-bold text-rose-500 mt-2">0</span>
+                    <p class="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase leading-tight font-semibold">Maaf Gak Datang</p>
+                </div>
+
+                <!-- Reaction 4: Aku Akan Datang (RSVP Yes) -->
+                <div class="flex flex-col items-center">
+                    <button class="reaction-btn text-2xl sm:text-3xl" data-reaction="will_come" onclick="handleReaction('will_come', this)">
+                        <span class="transform transition duration-300 hover:scale-125">🫂</span>
+                    </button>
+                    <span id="count-will_come" class="text-xs sm:text-sm font-bold text-rose-500 mt-2">0</span>
+                    <p class="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase leading-tight font-semibold">Aku Akan Datang</p>
+                </div>
             </div>
         </section>
 
         <!-- GIFT / DANA -->
-        <section class="px-6 py-8 bg-gradient-to-b from-transparent to-blue-50/50">
-            <div class="glass-card rounded-3xl p-6 shadow-xl border border-blue-100 overflow-hidden relative">
+        <section class="px-4 py-8 sm:px-8 sm:py-10 bg-gradient-to-b from-transparent to-rose-50/50">
+            <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-rose-100 overflow-hidden relative">
                 <!-- Decorative Circle -->
-                <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-400 rounded-full filter blur-3xl opacity-20"></div>
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-teal-400 rounded-full filter blur-3xl opacity-20"></div>
 
-                <div class="text-center mb-6">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" alt="DANA" class="h-8 mx-auto mb-2">
-                    <h3 class="font-bold text-gray-700 text-lg">Kado Tanda Sayang</h3>
-                    <p class="text-xs text-gray-500">Klik tombol mata untuk melihat detail</p>
+                <div class="text-center mb-8">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Logo_dana_blue.svg" alt="DANA" class="h-8 sm:h-10 mx-auto mb-2 filter drop-shadow">
+                    <h3 class="font-bold text-gray-700 text-xl sm:text-2xl">Kado Tanda Sayang</h3>
+                    <p class="text-sm text-gray-500">Berbagi kebahagiaan itu mudah. Klik tombol di bawah!</p>
                 </div>
 
                 <!-- Info Box -->
                 <div class="space-y-4">
                     <!-- NAMA -->
-                    <div class="bg-gray-50/80 p-4 rounded-xl flex justify-between items-center border border-gray-100">
+                    <div class="bg-white p-4 sm:p-5 rounded-xl flex justify-between items-center border border-gray-100 shadow-md">
                         <div>
                             <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Penerima</p>
-                            <p id="dana-name" class="font-bold text-gray-800 text-lg blur-md transition-all duration-500 select-none">TIL××××H</p>
+                            <!-- Data sensitif yang di-blur -->
+                            <p id="dana-name" class="font-extrabold text-gray-800 text-lg sm:text-xl blur-md transition-all duration-500 select-none">Tilawahul Huda</p>
                         </div>
-                        <button onclick="copyText('Zahratus Sania', this)" class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-500 hover:bg-blue-50 transition opacity-0 pointer-events-none" id="btn-copy-name">
-                            <i data-lucide="copy" class="w-4 h-4"></i>
+                        <button onclick="copyText('Zahratus Sania', this)" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-lg shadow-sm text-blue-500 hover:bg-blue-100 transition opacity-0 pointer-events-none transform hover:scale-105" id="btn-copy-name">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
                         </button>
                     </div>
 
                     <!-- NOMOR -->
-                    <div class="bg-gray-50/80 p-4 rounded-xl flex justify-between items-center border border-gray-100">
+                    <div class="bg-white p-4 sm:p-5 rounded-xl flex justify-between items-center border border-gray-100 shadow-md">
                         <div>
                             <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Nomor DANA</p>
-                            <p id="dana-number" class="font-bold text-gray-800 text-lg blur-md transition-all duration-500 select-none">6287852578351</p>
+                            <!-- Data sensitif yang di-blur -->
+                            <p id="dana-number" class="font-extrabold text-gray-800 text-lg sm:text-xl blur-md transition-all duration-500 select-none">6287852578351</p>
                         </div>
-                        <button onclick="copyText('081234567890', this)" class="w-8 h-8 flex items-center justify-center bg-white rounded-lg shadow-sm text-blue-500 hover:bg-blue-50 transition opacity-0 pointer-events-none" id="btn-copy-number">
-                            <i data-lucide="copy" class="w-4 h-4"></i>
+                        <button onclick="copyText('6287852578351', this)" class="w-10 h-10 flex items-center justify-center bg-gray-100 rounded-lg shadow-sm text-blue-500 hover:bg-blue-100 transition opacity-0 pointer-events-none transform hover:scale-105" id="btn-copy-number">
+                            <i data-lucide="copy" class="w-5 h-5"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Toggle Button -->
-                <button onclick="toggleDana()" id="toggle-dana-btn" class="w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold shadow-lg shadow-blue-200 flex items-center justify-center gap-2 transform transition hover:scale-[1.02] active:scale-95">
+                <button onclick="toggleDana()" id="toggle-dana-btn" class="w-full mt-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold shadow-xl shadow-blue-300 flex items-center justify-center gap-2 text-lg transform transition hover:scale-[1.01] active:scale-95">
                     <i data-lucide="eye" class="w-5 h-5"></i>
-                    <span>Buka</span>
+                    <span>Buka Detail Pembayaran</span>
                 </button>
 
-                <p id="thank-you-note" class="hidden text-center text-xs text-blue-500 mt-4 font-bold animate-pulse">✨ Terima kasih orang baik! ✨</p>
+                <p id="thank-you-note" class="hidden text-center text-sm text-blue-500 mt-4 font-extrabold animate-pulse">✨ Terima kasih orang baik! Semoga rezekimu berlimpah! ✨</p>
             </div>
         </section>
 
         <!-- MAP (Satelite) -->
-        <section class="h-72 relative border-y-4 border-white shadow-inner bg-gray-900 group">
+        <section class="h-64 sm:h-80 relative border-y-4 border-white shadow-inner bg-gray-900 group">
             <!-- Google Maps Embed (Satellite Mode t=k) -->
             <iframe 
                 class="w-full h-full filter brightness-110 contrast-125 grayscale-0 group-hover:scale-105 transition duration-700"
@@ -239,46 +343,52 @@
             </iframe>
             
             <!-- Overlay Label -->
-            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-lg border border-white/50 z-10">
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-xl border border-white/50 z-10">
                 <p class="text-xs font-bold text-gray-500 uppercase">Lokasi Acara</p>
-                <div class="flex items-center gap-1 text-red-500 font-bold">
+                <a href="https://maps.google.com/maps?q=-7.5341575,112.1980178" target="_blank" class="flex items-center gap-1 text-red-500 font-bold hover:text-red-700 transition">
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
-                    <span>Cek Lokasi Disini</span>
-                </div>
+                    <span class="text-sm">Buka di Maps</span>
+                </a>
             </div>
             
             <div class="absolute inset-0 pointer-events-none border-[10px] border-white/20"></div>
         </section>
 
         <!-- REALTIME MESSAGES (FIREBASE RTDB) -->
-        <section class="px-6 py-10 bg-gradient-to-t from-purple-100 to-white">
+        <section class="px-4 py-10 sm:px-8 sm:py-12 bg-gradient-to-t from-fuchsia-50 to-white">
             <div class="text-center mb-8">
-                <span class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full text-[10px] font-bold uppercase tracking-wider">Live Chat</span>
-                <h3 class="font-handwriting text-3xl text-gray-800 mt-2">Kirim Ucapan</h3>
-                <p class="text-sm text-gray-500">Pesanmu akan muncul secara real-time!</p>
+                <span class="px-3 py-1 bg-fuchsia-100 text-fuchsia-600 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-inner">Live Chat</span>
+                <h3 class="font-handwriting text-3xl sm:text-4xl text-gray-800 mt-2">Kirim Ucapan & Doa</h3>
+                <p class="text-sm text-gray-500">Pesanmu akan muncul secara real-time untuk dibaca Zahra!</p>
             </div>
 
             <!-- Chat Container -->
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-purple-100">
+            <div class="glass-card rounded-3xl shadow-2xl overflow-hidden border border-fuchsia-200">
                 <!-- List Pesan -->
-                <div id="messages-container" class="h-64 overflow-y-auto p-4 space-y-3 bg-gray-50 scroll-smooth">
+                <div id="messages-container" class="h-64 sm:h-72 overflow-y-auto p-4 sm:p-6 space-y-3 bg-fuchsia-50/50 scroll-smooth">
                     <div class="text-center pt-10 text-gray-400">
-                        <div class="animate-spin w-6 h-6 border-2 border-purple-400 border-t-transparent rounded-full mx-auto mb-2"></div>
+                        <div class="animate-spin w-6 h-6 border-2 border-fuchsia-400 border-t-transparent rounded-full mx-auto mb-2"></div>
                         <small>Memuat pesan...</small>
                     </div>
                 </div>
 
                 <!-- Input Area -->
-                <form id="message-form" class="p-4 bg-white border-t border-gray-100 relative z-20">
+                <form id="message-form" class="p-4 sm:p-6 bg-white border-t border-gray-100 relative z-20">
                     <div class="flex gap-2 mb-2">
-                        <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 flex-shrink-0">
-                            <i data-lucide="user" class="w-5 h-5"></i>
-                        </div>
-                        <input type="text" id="input-name" placeholder="Nama Kamu" class="w-full bg-gray-50 rounded-lg px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300 transition" required autocomplete="off">
+                        <!-- ** PERUBAHAN DI SINI: Added readonly class and attribute ** -->
+                        <input 
+                            type="text" 
+                            id="input-name" 
+                            placeholder="Nama Kamu (Wajib)" 
+                            class="w-full px-4 py-2 text-sm sm:text-base neumorphism-input font-bold text-gray-700 bg-gray-200 cursor-not-allowed" 
+                            required 
+                            autocomplete="off"
+                            readonly
+                        >
                     </div>
                     <div class="flex gap-2">
-                        <input type="text" id="input-msg" placeholder="Tulis harapanmu..." class="w-full bg-gray-50 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-purple-300 transition" required autocomplete="off">
-                        <button type="submit" class="bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-lg shadow-lg transition transform active:scale-95">
+                        <input type="text" id="input-msg" placeholder="Tulis harapanmu..." class="w-full px-4 py-3 text-sm sm:text-base neumorphism-input" required autocomplete="off">
+                        <button type="submit" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white p-3 rounded-xl shadow-lg shadow-fuchsia-200 transition transform active:scale-95 flex-shrink-0">
                             <i data-lucide="send" class="w-5 h-5"></i>
                         </button>
                     </div>
@@ -287,41 +397,56 @@
         </section>
 
         <!-- CLOSE BUTTON -->
-        <div class="pb-16 pt-6 text-center bg-purple-100">
-            <button onclick="closeGift()" class="px-8 py-3 rounded-full bg-white text-pink-500 font-bold shadow-lg border border-pink-200 hover:bg-pink-500 hover:text-white transition-all flex items-center gap-2 mx-auto">
+        <div class="pb-16 pt-6 text-center bg-white/50">
+            <button onclick="closeGift()" class="px-8 py-3 rounded-full bg-rose-500 text-white font-bold shadow-xl shadow-rose-300 hover:bg-rose-600 transition-all flex items-center gap-2 mx-auto text-lg transform hover:scale-[1.05] active:scale-95">
                 <i data-lucide="package-open" class="w-5 h-5"></i>
-                Tutup Kado
+                Tutup Kartu & Kado
             </button>
         </div>
 
         <!-- FOOTER -->
-        <footer class="bg-white text-center py-6 border-t border-gray-100">
-            <p class="text-xs text-gray-400">Created with ❤️ for Zahratus Sania</p>
+        <footer class="bg-gray-50 text-center py-6 border-t border-gray-100">
+            <p class="text-xs text-gray-400">© 2025 | Developed by Edo.<a href="https://wa.me/6285955201695?text=Halo,%20Admin"><h2>Kontak Admin</h2></a>.</p>
         </footer>
     </div>
 
     <!-- === FIREBASE & LOGIC SCRIPT === -->
     <script type="module">
-        // Import Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Konfigurasi Firebase Anda
+        // Generate UUID function for user ID
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // --- GLOBAL SETUP & USER ID ---
+        const USER_ID_KEY = 'zahra_reaction_user_id';
+        let reactionUserId = localStorage.getItem(USER_ID_KEY);
+        if (!reactionUserId) {
+            reactionUserId = generateUUID();
+            localStorage.setItem(USER_ID_KEY, reactionUserId);
+        }
+
+        // Konfigurasi Firebase (Dibiarkan sama dengan yang disediakan pengguna)
         const firebaseConfig = {
             apiKey: "AIzaSyBRAnZpX83hFpzU0RyMBlesHcFJRrsvpGg",
             authDomain: "ultah-5a889.firebaseapp.com",
             databaseURL: "https://ultah-5a889-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "ultah-5a889",
-            storageBucket: "ultah-5a889.firebasestorage.app",
+            storageBucket: "ultah-5a889.firebase storage.app",
             messagingSenderId: "707828837954",
             appId: "1:707828837954:web:5c21b4a2c5288c453787db",
             measurementId: "G-YT9V385LNM"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const messagesRef = ref(db, 'birthday_wishes');
+        const reactionsRef = ref(db, 'zahra_reactions/user_choices'); // Path baru untuk reaksi
 
         // --- CHAT LOGIC ---
         const msgForm = document.getElementById('message-form');
@@ -329,85 +454,152 @@
         const inputMsg = document.getElementById('input-msg');
         const msgContainer = document.getElementById('messages-container');
 
+        // ** LOGIC BARU: Mengambil Nama dari URL dan Mengisi Input **
+        const params = new URLSearchParams(window.location.search);
+        let guestName = params.get('guest');
+        
+        // Logika untuk mengambil nama dari path (jika ada) - Dihapus karena konflik dengan logika query parameter
+        // if (!guestName) {
+        //     const path = window.location.pathname;
+        //     const segment = path.substring(path.lastIndexOf('/') + 1);
+        //     if (segment && segment !== 'index.html' && segment.length > 2) {
+        //         guestName = segment;
+        //     }
+        // }
+        
+        // Memproses nama tamu
+        if (guestName) {
+            // Bersihkan nama dari underscore/hyphen dan decode
+            guestName = decodeURIComponent(guestName).replace(/[-_]/g, ' '); 
+        } else {
+            // Default ke "Anonim" jika tidak ada parameter
+            guestName = "Anonim";
+        }
+        
+        // Tampilkan nama di badge selamat datang
+        document.getElementById('guest-name-display').textContent = guestName;
+        document.getElementById('guest-badge').classList.remove('opacity-0');
+        
+        // Isi input nama dan pastikan sudah readonly (readonly sudah diatur di HTML)
+        inputName.value = guestName;
+
+
         // Kirim Pesan
         msgForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const name = inputName.value.trim();
+            // Ambil nama dari nilai input (yang sudah dikunci)
+            const name = inputName.value.trim(); 
             const msg = inputMsg.value.trim();
 
             if(name && msg) {
                 push(messagesRef, {
                     name: name,
                     text: msg,
-                    timestamp: serverTimestamp() // Gunakan timestamp server
+                    timestamp: serverTimestamp()
                 });
-                inputMsg.value = ''; // Reset input pesan saja
-                // Efek visual sukses
-                confetti({
-                    particleCount: 50,
-                    spread: 60,
-                    origin: { y: 0.8 },
-                    colors: ['#d8b4fe', '#f9a8d4']
-                });
+                inputMsg.value = ''; 
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 }, colors: ['#a78bfa', '#f9a8d4'] });
             }
         });
 
         // Baca Pesan (Realtime)
         onValue(messagesRef, (snapshot) => {
-            msgContainer.innerHTML = ''; // Clear loading/old data
+            msgContainer.innerHTML = ''; 
             const data = snapshot.val();
             
             if (data) {
-                // Konversi object ke array & sort berdasarkan timestamp (jika ada)
                 const messages = Object.values(data); 
-                // Kita tampilkan pesan terbaru di paling bawah, jadi tidak perlu sort terbalik untuk chat style
-                
+                // Sort by timestamp if available (older messages first)
+                messages.sort((a, b) => a.timestamp - b.timestamp);
+
                 messages.forEach(m => {
+                    const time = m.timestamp ? new Date(m.timestamp).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : 'Baru saja';
                     const bubble = document.createElement('div');
                     bubble.className = "flex flex-col animate-fadeIn";
                     bubble.innerHTML = `
-                        <div class="bg-white p-3 rounded-xl rounded-tl-none shadow-sm border border-purple-50 self-start max-w-[85%] ml-2 mb-2">
-                            <p class="text-xs font-bold text-pink-500 mb-1">${m.name}</p>
-                            <p class="text-sm text-gray-700 leading-snug">${m.text}</p>
+                        <div class="bg-white p-3 sm:p-4 rounded-2xl rounded-tl-none shadow-lg border border-fuchsia-50 self-start max-w-[95%] sm:max-w-[85%] ml-1 mb-2 transform transition hover:shadow-xl">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="text-sm sm:text-base font-bold text-rose-600">${m.name}</p>
+                                <small class="text-[10px] text-gray-400 mt-0.5 ml-2">${time}</small>
+                            </div>
+                            <p class="text-sm sm:text-base text-gray-700 leading-snug">${m.text}</p>
                         </div>
                     `;
                     msgContainer.appendChild(bubble);
                 });
-                
-                // Auto scroll ke bawah setiap ada pesan baru
                 msgContainer.scrollTop = msgContainer.scrollHeight;
             } else {
-                msgContainer.innerHTML = '<p class="text-center text-xs text-gray-400 mt-4">Belum ada ucapan. Jadilah yang pertama! 😊</p>';
+                msgContainer.innerHTML = '<p class="text-center text-sm text-gray-400 pt-10">Belum ada ucapan. Jadilah yang pertama! 😊</p>';
             }
         });
 
-        // --- URL NAME LOGIC ---
-        // Deteksi ?guest=Nama atau /Nama
-        const params = new URLSearchParams(window.location.search);
-        let guestName = params.get('guest');
+        // --- REACTION LOGIC ---
+        let currentUserReaction = null;
 
-        // Fallback: Coba ambil dari path terakhir jika tidak ada query param
-        if (!guestName) {
-            const path = window.location.pathname;
-            const segment = path.substring(path.lastIndexOf('/') + 1);
-            if (segment && segment !== 'index.html' && segment.length > 2) {
-                guestName = segment;
+        // 1. Update DB on Click
+        window.handleReaction = function(reactionType, buttonElement) {
+            const userIdRef = ref(db, `zahra_reactions/user_choices/${reactionUserId}`);
+            
+            if (reactionType === currentUserReaction) {
+                // DESELECT (Clicking the same reaction again)
+                remove(userIdRef);
+                currentUserReaction = null;
+            } else {
+                // SELECT NEW REACTION
+                set(userIdRef, reactionType);
+                currentUserReaction = reactionType;
+                
+                // Animasi saat memilih
+                buttonElement.classList.add('animate-ping-once');
+                setTimeout(() => buttonElement.classList.remove('animate-ping-once'), 500);
             }
-        }
+        };
 
-        if (guestName) {
-            guestName = decodeURIComponent(guestName).replace(/[-_]/g, ' '); // Bersihkan nama
-            document.getElementById('guest-name-display').textContent = guestName;
-            document.getElementById('guest-badge').classList.remove('opacity-0');
-            inputName.value = guestName; // Auto fill nama di form chat
-        }
+        // 2. Load Reactions Real-time
+        onValue(reactionsRef, (snapshot) => {
+            const userChoices = snapshot.val() || {};
+            const counts = { love: 0, birthday: 0, cannot_come: 0, will_come: 0 };
+            let myReaction = null;
+            
+            // Calculate counts and find current user's selection
+            for (const userId in userChoices) {
+                const reaction = userChoices[userId];
+                if (counts.hasOwnProperty(reaction)) {
+                    counts[reaction]++;
+                }
+                if (userId === reactionUserId) {
+                    myReaction = reaction;
+                }
+            }
+
+            // Update UI elements
+            const reactionButtons = document.querySelectorAll('.reaction-btn');
+            reactionButtons.forEach(btn => {
+                const type = btn.getAttribute('data-reaction');
+                const countElement = document.getElementById(`count-${type}`);
+                
+                // Update Count
+                countElement.textContent = counts[type];
+                
+                // Update Button Style (Single selection enforcement)
+                if (type === myReaction) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+            
+            // Update local state
+            currentUserReaction = myReaction;
+        });
+
     </script>
 
     <script>
         // Init Icons
         lucide.createIcons();
 
-        // --- UI LOGIC ---
+        // --- UI LOGIC (Non-Firebase) ---
         let clickCount = 0;
         let giftScale = 1;
         const giftContainer = document.getElementById('gift-container');
@@ -416,42 +608,67 @@
         const clickStatus = document.getElementById('click-status');
         const audio = document.getElementById('bg-music');
         const typewriterArea = document.getElementById('typewriter-area');
+        
+        // Target date for countdown (December 14, 2025)
+        const targetDate = new Date('December 14, 2025 00:00:00').getTime();
 
-        // 1. Gift Interaction
+        // 1. Countdown Timer Logic
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Format numbers to two digits
+            const pad = (num) => String(num).padStart(2, '0');
+
+            if (distance < 0) {
+                clearInterval(window.countdownInterval);
+                document.getElementById('countdown-days').textContent = '00';
+                document.getElementById('countdown-hours').textContent = '00';
+                document.getElementById('countdown-minutes').textContent = '00';
+                document.getElementById('countdown-seconds').textContent = '00';
+                document.getElementById('countdown-message').textContent = '🥳 HARI INI HARI SPESIALMU! Happy Birthday! 🎉';
+            } else {
+                document.getElementById('countdown-days').textContent = pad(days);
+                document.getElementById('countdown-hours').textContent = pad(hours);
+                document.getElementById('countdown-minutes').textContent = pad(minutes);
+                document.getElementById('countdown-seconds').textContent = pad(seconds);
+                document.getElementById('countdown-message').textContent = 'Menuju hari spesial Zahra...';
+            }
+        }
+
+        // Start countdown immediately
+        window.countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial call
+
+        // 2. Gift Interaction
         function handleGiftClick() {
             clickCount++;
-            giftScale += 0.3;
+            giftScale += 0.2;
             giftContainer.style.setProperty('--scale', giftScale);
             
-            // Efek getar
             giftContainer.classList.add('gift-wobble');
             setTimeout(() => giftContainer.classList.remove('gift-wobble'), 400);
 
-            // Update Text
             if(clickCount < 3) clickStatus.innerText = "Lagi! Lebih besar lagi! 😆";
             else if(clickCount < 5) clickStatus.innerText = "Dikit lagiii... 🤏";
+            else clickStatus.innerText = "Berhasil Dibuka! 🎉";
 
-            // Trigger Open
             if (clickCount >= 5) {
                 openGift();
             }
         }
 
         function openGift() {
-            // Confetti Explosion
-            confetti({
-                particleCount: 150,
-                spread: 100,
-                origin: { y: 0.6 }
-            });
-
-            // Animasi transisi
+            confetti({ particleCount: 150, spread: 100, origin: { y: 0.6 }, colors: ['#f472b6', '#a78bfa', '#60a5fa'] });
             giftContainer.style.transform = "scale(0)";
-            clickStatus.innerText = "Yeayyy! 🎉";
             
             setTimeout(() => {
                 introScreen.style.opacity = 0;
-                // Play Audio (User interaction required previously, so this works)
                 audio.play().catch(e => console.log("Audio auto-play prevented"));
                 
                 setTimeout(() => {
@@ -462,8 +679,7 @@
             }, 500);
         }
 
-        function closeGift() {
-            // Reset State
+        window.closeGift = function() {
             audio.pause();
             audio.currentTime = 0;
             mainContent.classList.add('hidden');
@@ -474,11 +690,11 @@
             giftScale = 1;
             giftContainer.style.setProperty('--scale', 1);
             giftContainer.style.transform = "scale(1)";
-            clickStatus.innerText = "Ketuk Kadonya! 🎁";
+            clickStatus.innerText = "Ketuk 5 kali untuk membuka! 👆";
             window.scrollTo(0, 0);
         }
 
-        // 2. Animations (Balloons & Typing)
+        // 3. Animations (Balloons & Typing)
         function startAnimations() {
             createBalloons();
             startTypewriter();
@@ -502,7 +718,6 @@
                 b.style.animationDelay = (Math.random() * 5) + 's';
                 b.style.boxShadow = 'inset -5px -5px 10px rgba(0,0,0,0.1)';
                 
-                // Tali
                 const string = document.createElement('div');
                 string.style.cssText = `position:absolute; bottom:-40px; left:50%; width:1px; height:40px; background:rgba(0,0,0,0.2);`;
                 b.appendChild(string);
@@ -511,7 +726,7 @@
             }
         }
 
-        // 3. Typewriter Effect
+        // 4. Typewriter Effect
         const messageText = `Hai Zahratus Sania... ✨\n\nTepatnya Tanggal 14/12/2025! 🎉\nSelamat ulang tahun ya Zahra. Semoga di pertambahan usiamu ini, kamu semakin dewasa, semakin pintar, Semakin rajin, dan  semoga tercapai segala cita-citamu.\n\nSemoga hari-harimu ke depan selalu dipenuhi warna-warni yang indah, seindah balon-balon yang beterbangan ini. Tetaplah jadi orang baik dan selalu tersenyum, karena senyummu itu, Masya Allah...\n\nSehat selalu ya, dan semoga Allah selalu melindungimu di mana pun kamu berada. Aamiin.\n\nSelamat Ulang Tahun! 🎂`;
 
         async function startTypewriter() {
@@ -524,26 +739,20 @@
                 const char = chars[i] === '\n' ? '<br>' : chars[i];
                 typewriterArea.innerHTML += char;
                 
-                // Auto scroll logic (gentle)
-                if (i % 20 === 0) {
-                   // Optional: Check if user is scrolling manually before forcing scroll
-                }
-                
                 await new Promise(r => setTimeout(r, 40));
             }
             
             typewriterArea.classList.remove('typing-cursor');
             
-            // Trigger scroll down after typing finishes
             setTimeout(() => {
-                const nextSection = document.querySelector('section:nth-of-type(2)');
-                if(nextSection) nextSection.scrollIntoView({behavior: 'smooth', block: 'center'});
+                const reactions = document.getElementById('reactions-container');
+                if(reactions) reactions.scrollIntoView({behavior: 'smooth', block: 'start'});
             }, 1500);
         }
 
-        // 4. DANA Logic
+        // 5. DANA Logic (Revealing sensitive info)
         let isDanaOpen = false;
-        function toggleDana() {
+        window.toggleDana = function() {
             const name = document.getElementById('dana-name');
             const num = document.getElementById('dana-number');
             const btnName = document.getElementById('btn-copy-name');
@@ -554,37 +763,35 @@
             isDanaOpen = !isDanaOpen;
 
             if(isDanaOpen) {
-                // Reveal
+                // Reveal Full Info
+                name.textContent = 'Tilawahul Huda';
+                num.textContent = '6287852578351';
                 name.classList.remove('blur-md', 'select-none');
                 num.classList.remove('blur-md', 'select-none');
                 
-                // Enable Buttons
                 btnName.classList.remove('opacity-0', 'pointer-events-none');
                 btnNum.classList.remove('opacity-0', 'pointer-events-none');
                 
-                // UI Change
                 toggleBtn.innerHTML = '<i data-lucide="eye-off" class="w-5 h-5"></i><span>Tutup Informasi</span>';
-                toggleBtn.className = "w-full mt-6 py-3 bg-gray-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 transition";
+                toggleBtn.className = "w-full mt-8 py-3 sm:py-4 bg-gray-500 text-white rounded-xl font-bold flex items-center justify-center gap-2 text-lg transform transition hover:scale-[1.01] active:scale-95";
                 thanks.classList.remove('hidden');
             } else {
-                // Hide
+                // Hide/Blur Info
+                name.textContent = 'Tilawahul Huda'; // Keep real name but blur
+                num.textContent = '6287852578351'; // Keep real number but blur
                 name.classList.add('blur-md', 'select-none');
-                num.classList.add('blur-md', 'select-none');
-                
-                // Disable Buttons
                 btnName.classList.add('opacity-0', 'pointer-events-none');
+                num.classList.add('blur-md', 'select-none');
                 btnNum.classList.add('opacity-0', 'pointer-events-none');
                 
-                // UI Change
-                toggleBtn.innerHTML = '<i data-lucide="eye" class="w-5 h-5"></i><span>Buka Informasi</span>';
-                toggleBtn.className = "w-full mt-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold shadow-lg shadow-blue-200 flex items-center justify-center gap-2 transform transition hover:scale-[1.02] active:scale-95";
+                toggleBtn.innerHTML = '<i data-lucide="eye" class="w-5 h-5"></i><span>Buka Detail Pembayaran</span>';
+                toggleBtn.className = "w-full mt-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl font-bold shadow-xl shadow-blue-300 flex items-center justify-center gap-2 text-lg transform transition hover:scale-[1.01] active:scale-95";
                 thanks.classList.add('hidden');
             }
             lucide.createIcons();
         }
 
         window.copyText = function(text, btnElement) {
-            // Gunakan API modern clipboard
             navigator.clipboard.writeText(text).then(() => {
                 const originalContent = btnElement.innerHTML;
                 btnElement.innerHTML = '<i data-lucide="check" class="w-4 h-4 text-green-500"></i>';
@@ -597,17 +804,14 @@
                     lucide.createIcons();
                 }, 1500);
             }).catch(err => {
-                // Fallback manual jika HTTPS tidak aktif atau browser lama
                 const textarea = document.createElement('textarea');
                 textarea.value = text;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                alert("Berhasil disalin: " + text);
             });
         }
-
     </script>
 </body>
 </html>

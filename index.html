@@ -28,7 +28,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Pacifico (Cute) & Quicksand (Modern) -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -384,27 +384,38 @@
                     </div>
                 </div>
 
-                <!-- Input Area -->
-                <form id="message-form" class="p-4 sm:p-6 bg-white border-t border-gray-100 relative z-20">
-                    <div class="flex gap-2 mb-2">
-                        <!-- ** PERUBAHAN DI SINI: Added readonly class and attribute ** -->
-                        <input 
-                            type="text" 
-                            id="input-name" 
-                            placeholder="Nama Kamu (Wajib)" 
-                            class="w-full px-4 py-2 text-sm sm:text-base neumorphism-input font-bold text-gray-700 bg-gray-200 cursor-not-allowed" 
-                            required 
-                            autocomplete="off"
-                            readonly
-                        >
+                <!-- Input Area: Wrapper untuk Status dan Form -->
+                <div id="chat-input-wrapper" class="p-4 sm:p-6 bg-white border-t border-gray-100 relative z-20">
+                    <!-- Area untuk pesan status (Loading, Offline, Error) -->
+                    <div id="chat-status-message" class="text-center">
+                        <div class="flex items-center justify-center text-fuchsia-500 font-bold">
+                            <div class="animate-spin w-5 h-5 border-2 border-fuchsia-400 border-t-transparent rounded-full mr-2"></div> 
+                            Memeriksa status pesan...
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <input type="text" id="input-msg" placeholder="Tulis harapanmu..." class="w-full px-4 py-3 text-sm sm:text-base neumorphism-input" required autocomplete="off">
-                        <button type="submit" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white p-3 rounded-xl shadow-lg shadow-fuchsia-200 transition transform active:scale-95 flex-shrink-0">
-                            <i data-lucide="send" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </form>
+
+                    <!-- Form Input (Akan disembunyikan jika status 'Offline') -->
+                    <form id="message-form" class="hidden">
+                        <div class="flex gap-2 mb-2">
+                            <!-- ** PERUBAHAN DI SINI: Added readonly class and attribute ** -->
+                            <input 
+                                type="text" 
+                                id="input-name" 
+                                placeholder="Nama Kamu (Wajib)" 
+                                class="w-full px-4 py-2 text-sm sm:text-base neumorphism-input font-bold text-gray-700 bg-gray-200 cursor-not-allowed" 
+                                required 
+                                autocomplete="off"
+                                readonly
+                            >
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="text" id="input-msg" placeholder="Tulis harapanmu..." class="w-full px-4 py-3 text-sm sm:text-base neumorphism-input" required autocomplete="off">
+                            <button type="submit" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white p-3 rounded-xl shadow-lg shadow-fuchsia-200 transition transform active:scale-95 flex-shrink-0">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
 
@@ -422,7 +433,7 @@
         </footer>
     </div>
 
-    <!-- === FIREBASE & LOGIC SCRIPT === -->
+    <!-- === FIREBASE & LOGIC SCRIPT (Module) === -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -469,15 +480,6 @@
         // ** LOGIC BARU: Mengambil Nama dari URL dan Mengisi Input **
         const params = new URLSearchParams(window.location.search);
         let guestName = params.get('guest');
-        
-        // Logika untuk mengambil nama dari path (jika ada) - Dihapus karena konflik dengan logika query parameter
-        // if (!guestName) {
-        //     const path = window.location.pathname;
-        //     const segment = path.substring(path.lastIndexOf('/') + 1);
-        //     if (segment && segment !== 'index.html' && segment.length > 2) {
-        //         guestName = segment;
-        //     }
-        // }
         
         // Memproses nama tamu
         if (guestName) {
@@ -607,6 +609,7 @@
 
     </script>
 
+    <!-- === UI LOGIC & STATUS CHECK SCRIPT (Non-module) === -->
     <script>
         // Init Icons
         lucide.createIcons();
@@ -824,6 +827,89 @@
                 document.body.removeChild(textarea);
             });
         }
+        
+        // --- FITUR BARU: CEK STATUS SERVER UNTUK CHAT ---
+        async function checkServerStatus() {
+            const url = 'https://raw.githubusercontent.com/Edo-bo/open-close/main/server.json';
+            const formElement = document.getElementById('message-form');
+            const statusMessageContainer = document.getElementById('chat-status-message');
+            
+            // Tampilkan status loading awal
+            statusMessageContainer.classList.remove('hidden');
+            formElement.classList.add('hidden'); // Sembunyikan form
+
+            const maxRetries = 5;
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(url, { cache: "no-cache" });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    // Ambil status, default ke 'Offline' jika tidak ditemukan
+                    const status = data[0]?.Status || 'Offline'; 
+
+                    if (status.toLowerCase() === 'online') {
+                        // Status Online: Tampilkan Form
+                        formElement.classList.remove('hidden');
+                        statusMessageContainer.classList.add('hidden');
+                        return; // Berhasil, keluar dari fungsi
+                    } else {
+                        // Status Offline: Tampilkan Pesan Penutupan
+                        formElement.classList.add('hidden');
+                        statusMessageContainer.innerHTML = `
+                            <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
+                                <i data-lucide="lock" class="w-6 h-6 text-red-500 mx-auto mb-2"></i>
+                                <p class="font-bold text-red-600">Pesan Ditutup Sementara</p>
+                                <p class="text-sm text-red-500">Fitur kirim ucapan sedang tidak aktif. Silakan coba lagi nanti.</p>
+                            </div>
+                        `;
+                        statusMessageContainer.classList.remove('hidden');
+                        lucide.createIcons();
+                        return; // Berhasil cek status, keluar dari fungsi
+                    }
+                } catch (error) {
+                    console.error(`Attempt ${attempt + 1} failed (Retrying...):`, error.message);
+                    if (attempt === maxRetries - 1) {
+                        // Upaya terakhir gagal: Tampilkan pesan error
+                        formElement.classList.add('hidden');
+                        statusMessageContainer.innerHTML = `
+                            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-center">
+                                <i data-lucide="alert-triangle" class="w-6 h-6 text-yellow-500 mx-auto mb-2"></i>
+                                <p class="font-bold text-yellow-600">Gagal Memuat Status</p>
+                                <p class="text-sm text-yellow-500">Tidak dapat terhubung ke server untuk memuat fitur chat.</p>
+                            </div>
+                        `;
+                        statusMessageContainer.classList.remove('hidden');
+                        lucide.createIcons();
+                        return;
+                    } else {
+                       // Coba lagi dengan jeda eksponensial
+                        const delay = Math.pow(2, attempt) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                    }
+                }
+            }
+        }
+        // --- END FITUR BARU ---
+
+
+        window.onload = function () {
+            // Start the UI/Countdown logic
+            updateCountdown(); 
+            
+            // Start checking server status for chat functionality
+            checkServerStatus(); 
+            
+            // Ensure icons are created after any dynamic injection (like status message)
+            lucide.createIcons();
+            
+            // Start the animation on window load (if gift is already open)
+            // Note: This logic is usually inside openGift(), but kept here for robustness
+            // No need to call startAnimations here since it's called in openGift()
+        }
     </script>
 </body>
 </html>
+

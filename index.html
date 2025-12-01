@@ -28,7 +28,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts: Pacifico (Cute) & Quicksand (Modern) -->
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -384,20 +384,34 @@
                     </div>
                 </div>
 
-                <!-- Input Area: Wrapper untuk Status dan Form -->
-                <div id="chat-input-wrapper" class="p-4 sm:p-6 bg-white border-t border-gray-100 relative z-20">
-                    <!-- Area untuk pesan status (Loading, Offline, Error) -->
-                    <div id="chat-status-message" class="text-center">
-                        <div class="flex items-center justify-center text-fuchsia-500 font-bold">
-                            <div class="animate-spin w-5 h-5 border-2 border-fuchsia-400 border-t-transparent rounded-full mr-2"></div> 
-                            Memeriksa status pesan...
-                        </div>
+                <!-- Input Area / Control Area -->
+                <div class="p-4 sm:p-6 bg-white border-t border-gray-100 relative z-20 min-h-[100px] flex items-center justify-center">
+                    
+                    <!-- 1. LOADING STATE (Default) -->
+                    <div id="chat-loading" class="flex flex-col items-center justify-center text-gray-400 w-full py-4">
+                        <div class="animate-spin w-6 h-6 border-2 border-rose-400 border-t-transparent rounded-full mb-2"></div>
+                        <span class="text-xs">Mengecek status chat...</span>
                     </div>
 
-                    <!-- Form Input (Akan disembunyikan jika status 'Offline') -->
-                    <form id="message-form" class="hidden">
+                    <!-- 2. ERROR STATE -->
+                    <div id="chat-error-view" class="hidden flex-col items-center justify-center text-center w-full py-2">
+                        <i data-lucide="alert-circle" class="w-8 h-8 text-red-400 mb-2"></i>
+                        <p class="text-sm font-bold text-gray-600">Gagal memuat status chat</p>
+                        <p class="text-xs text-gray-400">Silakan refresh halaman</p>
+                    </div>
+
+                    <!-- 3. OFFLINE / LOCKED STATE -->
+                    <div id="chat-locked-view" class="hidden flex-col items-center justify-center text-center w-full py-2 bg-gray-50 rounded-xl border border-gray-200 border-dashed">
+                        <div class="bg-gray-200 p-3 rounded-full mb-2">
+                            <i data-lucide="lock" class="w-6 h-6 text-gray-500"></i>
+                        </div>
+                        <p class="text-sm font-bold text-gray-600">Sesi Kirim Pesan Ditutup</p>
+                        <p class="text-xs text-gray-400 mt-1">Hanya admin yang dapat membuka sesi ini kembali.</p>
+                    </div>
+
+                    <!-- 4. ONLINE / FORM STATE -->
+                    <form id="message-form" class="hidden w-full">
                         <div class="flex gap-2 mb-2">
-                            <!-- ** PERUBAHAN DI SINI: Added readonly class and attribute ** -->
                             <input 
                                 type="text" 
                                 id="input-name" 
@@ -415,6 +429,7 @@
                             </button>
                         </div>
                     </form>
+
                 </div>
             </div>
         </section>
@@ -433,7 +448,7 @@
         </footer>
     </div>
 
-    <!-- === FIREBASE & LOGIC SCRIPT (Module) === -->
+    <!-- === FIREBASE & LOGIC SCRIPT === -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, set, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -468,40 +483,82 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        
+        // Referensi Database
         const messagesRef = ref(db, 'birthday_wishes');
-        const reactionsRef = ref(db, 'zahra_reactions/user_choices'); // Path baru untuk reaksi
+        const reactionsRef = ref(db, 'zahra_reactions/user_choices'); 
+        
+        // --- Referensi BARU untuk Kontrol Status Chat ---
+        const chatStatusRef = ref(db, 'config/chat_open'); 
 
-        // --- CHAT LOGIC ---
-        const msgForm = document.getElementById('message-form');
+        // --- UI Elements untuk Kontrol Chat ---
+        const uiLoading = document.getElementById('chat-loading');
+        const uiError = document.getElementById('chat-error-view');
+        const uiLocked = document.getElementById('chat-locked-view');
+        const uiForm = document.getElementById('message-form');
+
+        // --- CHAT STATUS LOGIC (OPEN/CLOSE) ---
+        onValue(chatStatusRef, (snapshot) => {
+            // Sembunyikan loading
+            uiLoading.classList.add('hidden');
+            uiLoading.classList.remove('flex');
+
+            const isOpen = snapshot.val();
+
+            // Jika nilainya true (Online/Buka)
+            if (isOpen === true) {
+                // Tampilkan Form, Sembunyikan Lock & Error
+                uiForm.classList.remove('hidden');
+                uiLocked.classList.add('hidden');
+                uiLocked.classList.remove('flex');
+                uiError.classList.add('hidden');
+                uiError.classList.remove('flex');
+            } 
+            // Jika nilainya false (Offline/Tutup) atau null (belum diset)
+            else {
+                // Tampilkan Lock, Sembunyikan Form & Error
+                uiForm.classList.add('hidden');
+                uiLocked.classList.remove('hidden');
+                uiLocked.classList.add('flex');
+                uiError.classList.add('hidden');
+                uiError.classList.remove('flex');
+
+                // Jika ingin membuat icon lock muncul, panggil ini lagi (karena elemen baru ditampilkan)
+                if(typeof lucide !== 'undefined') lucide.createIcons();
+            }
+        }, (error) => {
+            console.error("Firebase Error:", error);
+            // Tampilkan Error, Sembunyikan yang lain
+            uiLoading.classList.add('hidden');
+            uiForm.classList.add('hidden');
+            uiLocked.classList.add('hidden');
+            uiError.classList.remove('hidden');
+            uiError.classList.add('flex');
+            if(typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+
+        // --- CHAT SEND LOGIC (EXISTING) ---
         const inputName = document.getElementById('input-name');
         const inputMsg = document.getElementById('input-msg');
         const msgContainer = document.getElementById('messages-container');
 
-        // ** LOGIC BARU: Mengambil Nama dari URL dan Mengisi Input **
+        // Logic Query Params untuk Nama Tamu
         const params = new URLSearchParams(window.location.search);
         let guestName = params.get('guest');
-        
-        // Memproses nama tamu
         if (guestName) {
-            // Bersihkan nama dari underscore/hyphen dan decode
             guestName = decodeURIComponent(guestName).replace(/[-_]/g, ' '); 
         } else {
-            // Default ke "Anonim" jika tidak ada parameter
             guestName = "Anonim";
         }
-        
-        // Tampilkan nama di badge selamat datang
         document.getElementById('guest-name-display').textContent = guestName;
         document.getElementById('guest-badge').classList.remove('opacity-0');
-        
-        // Isi input nama dan pastikan sudah readonly (readonly sudah diatur di HTML)
         inputName.value = guestName;
 
 
         // Kirim Pesan
-        msgForm.addEventListener('submit', (e) => {
+        uiForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            // Ambil nama dari nilai input (yang sudah dikunci)
             const name = inputName.value.trim(); 
             const msg = inputMsg.value.trim();
 
@@ -523,7 +580,6 @@
             
             if (data) {
                 const messages = Object.values(data); 
-                // Sort by timestamp if available (older messages first)
                 messages.sort((a, b) => a.timestamp - b.timestamp);
 
                 messages.forEach(m => {
@@ -555,15 +611,11 @@
             const userIdRef = ref(db, `zahra_reactions/user_choices/${reactionUserId}`);
             
             if (reactionType === currentUserReaction) {
-                // DESELECT (Clicking the same reaction again)
                 remove(userIdRef);
                 currentUserReaction = null;
             } else {
-                // SELECT NEW REACTION
                 set(userIdRef, reactionType);
                 currentUserReaction = reactionType;
-                
-                // Animasi saat memilih
                 buttonElement.classList.add('animate-ping-once');
                 setTimeout(() => buttonElement.classList.remove('animate-ping-once'), 500);
             }
@@ -575,7 +627,6 @@
             const counts = { love: 0, birthday: 0, cannot_come: 0, will_come: 0 };
             let myReaction = null;
             
-            // Calculate counts and find current user's selection
             for (const userId in userChoices) {
                 const reaction = userChoices[userId];
                 if (counts.hasOwnProperty(reaction)) {
@@ -586,30 +637,22 @@
                 }
             }
 
-            // Update UI elements
             const reactionButtons = document.querySelectorAll('.reaction-btn');
             reactionButtons.forEach(btn => {
                 const type = btn.getAttribute('data-reaction');
                 const countElement = document.getElementById(`count-${type}`);
-                
-                // Update Count
                 countElement.textContent = counts[type];
-                
-                // Update Button Style (Single selection enforcement)
                 if (type === myReaction) {
                     btn.classList.add('selected');
                 } else {
                     btn.classList.remove('selected');
                 }
             });
-            
-            // Update local state
             currentUserReaction = myReaction;
         });
 
     </script>
 
-    <!-- === UI LOGIC & STATUS CHECK SCRIPT (Non-module) === -->
     <script>
         // Init Icons
         lucide.createIcons();
@@ -779,7 +822,7 @@
 
             if(isDanaOpen) {
                 // Reveal Full Info
-                name.textContent = 'Tilawahul Huda';
+                name.textContent = 'TIL××××H';
                 num.textContent = '6287852578351';
                 name.classList.remove('blur-md', 'select-none');
                 num.classList.remove('blur-md', 'select-none');
@@ -792,7 +835,7 @@
                 thanks.classList.remove('hidden');
             } else {
                 // Hide/Blur Info
-                name.textContent = 'Tilawahul Huda'; // Keep real name but blur
+                name.textContent = 'TIL××××H'; // Keep real name but blur
                 num.textContent = '6287852578351'; // Keep real number but blur
                 name.classList.add('blur-md', 'select-none');
                 btnName.classList.add('opacity-0', 'pointer-events-none');
@@ -827,89 +870,6 @@
                 document.body.removeChild(textarea);
             });
         }
-        
-        // --- FITUR BARU: CEK STATUS SERVER UNTUK CHAT ---
-        async function checkServerStatus() {
-            const url = 'https://raw.githubusercontent.com/Edo-bo/open-close/main/server.json';
-            const formElement = document.getElementById('message-form');
-            const statusMessageContainer = document.getElementById('chat-status-message');
-            
-            // Tampilkan status loading awal
-            statusMessageContainer.classList.remove('hidden');
-            formElement.classList.add('hidden'); // Sembunyikan form
-
-            const maxRetries = 5;
-            for (let attempt = 0; attempt < maxRetries; attempt++) {
-                try {
-                    const response = await fetch(url, { cache: "no-cache" });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    // Ambil status, default ke 'Offline' jika tidak ditemukan
-                    const status = data[0]?.Status || 'Offline'; 
-
-                    if (status.toLowerCase() === 'online') {
-                        // Status Online: Tampilkan Form
-                        formElement.classList.remove('hidden');
-                        statusMessageContainer.classList.add('hidden');
-                        return; // Berhasil, keluar dari fungsi
-                    } else {
-                        // Status Offline: Tampilkan Pesan Penutupan
-                        formElement.classList.add('hidden');
-                        statusMessageContainer.innerHTML = `
-                            <div class="p-4 bg-red-50 border border-red-200 rounded-xl text-center">
-                                <i data-lucide="lock" class="w-6 h-6 text-red-500 mx-auto mb-2"></i>
-                                <p class="font-bold text-red-600">Pesan Ditutup Sementara</p>
-                                <p class="text-sm text-red-500">Fitur kirim ucapan sedang tidak aktif. Silakan coba lagi nanti.</p>
-                            </div>
-                        `;
-                        statusMessageContainer.classList.remove('hidden');
-                        lucide.createIcons();
-                        return; // Berhasil cek status, keluar dari fungsi
-                    }
-                } catch (error) {
-                    console.error(`Attempt ${attempt + 1} failed (Retrying...):`, error.message);
-                    if (attempt === maxRetries - 1) {
-                        // Upaya terakhir gagal: Tampilkan pesan error
-                        formElement.classList.add('hidden');
-                        statusMessageContainer.innerHTML = `
-                            <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-center">
-                                <i data-lucide="alert-triangle" class="w-6 h-6 text-yellow-500 mx-auto mb-2"></i>
-                                <p class="font-bold text-yellow-600">Gagal Memuat Status</p>
-                                <p class="text-sm text-yellow-500">Tidak dapat terhubung ke server untuk memuat fitur chat.</p>
-                            </div>
-                        `;
-                        statusMessageContainer.classList.remove('hidden');
-                        lucide.createIcons();
-                        return;
-                    } else {
-                       // Coba lagi dengan jeda eksponensial
-                        const delay = Math.pow(2, attempt) * 1000;
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                    }
-                }
-            }
-        }
-        // --- END FITUR BARU ---
-
-
-        window.onload = function () {
-            // Start the UI/Countdown logic
-            updateCountdown(); 
-            
-            // Start checking server status for chat functionality
-            checkServerStatus(); 
-            
-            // Ensure icons are created after any dynamic injection (like status message)
-            lucide.createIcons();
-            
-            // Start the animation on window load (if gift is already open)
-            // Note: This logic is usually inside openGift(), but kept here for robustness
-            // No need to call startAnimations here since it's called in openGift()
-        }
     </script>
 </body>
 </html>
-
